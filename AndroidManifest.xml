@@ -1,0 +1,50 @@
+<!--
+  Copyright 2013 Google Inc.
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+  -->
+
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+          package="com.ctrlplusz.dashclock.yr">
+
+    <uses-sdk android:minSdkVersion="17" android:targetSdkVersion="17" />
+
+    <!-- Weather permissions -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+
+    <application android:label="@string/app_name"
+                 android:icon="@drawable/ic_launcher"
+                 android:theme="@android:style/Theme.Holo.Light.DarkActionBar">
+
+        <service android:name="com.ctrlplusz.dashclock.yr.YrExtension"
+                 android:icon="@drawable/ic_launcher_in_app"
+                 android:label="Yr Weather"
+                 android:permission="com.google.android.apps.dashclock.permission.READ_EXTENSION_DATA">
+            <intent-filter>
+                <action android:name="com.google.android.apps.dashclock.Extension" />
+            </intent-filter>
+            <meta-data android:name="protocolVersion" android:value="1" />
+            <meta-data android:name="description"
+                       android:value="Weather extension with data provided by yr.no" />
+            <meta-data android:name="settingsActivity"
+                       android:value="com.ctrlplusz.dashclock.yr.YrSettingsActivity" />
+        </service>
+
+        <activity android:name="com.ctrlplusz.dashclock.yr.YrSettingsActivity"
+                  android:label="Yr Weather Settings"
+                  android:exported="true" />
+
+    </application>
+</manifest>
