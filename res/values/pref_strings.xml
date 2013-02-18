@@ -15,6 +15,10 @@
   -->
 
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <!-- Universal settings preferences -->
+    <string name="pref_yr_shortcut_title">Shortcut</string>
+    <string name="pref_yr_shortcut_default">(Default)</string>
+
     <!-- Weather -->
     <string name="pref_yr_weather_units_title">Weather units</string>
     <string-array name="pref_yr_weather_units_display_names">
@@ -24,5 +28,16 @@
     <string-array name="pref_yr_weather_units_values">
         <item>f</item>
         <item>c</item>
+    </string-array>
+
+    <!-- Weather -->
+    <string name="pref_yr_weather_decimals_title">Show temperature with zero or one decimal?</string>
+    <string-array name="pref_yr_weather_decimals_display_names">
+        <item>Zero</item>
+        <item>One</item>
+    </string-array>
+    <string-array name="pref_yr_weather_decimals_values">
+        <item>zero</item>
+        <item>one</item>
     </string-array>
 </resources>

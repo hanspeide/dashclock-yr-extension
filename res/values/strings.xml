@@ -20,11 +20,6 @@
 
     <string name="status_none">––</string>
 
-
-    <!-- Universal settings preferences -->
-    <string name="pref_shortcut_title">Shortcut</string>
-    <string name="pref_shortcut_default">(Default)</string>
-
     <string name="title_apps">Apps</string>
     <string name="title_shortcuts">Shortcuts</string>
 
@@ -45,4 +40,6 @@
     <string name="later_forecast_template">Later:
         <xliff:g id="forecast">%1$s</xliff:g>
     </string>
+    <string name="no_weather_data">No weather data available</string>
+    <string name="no_location_data">Your location could not be determined</string>
 </resources>

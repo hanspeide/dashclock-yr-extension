@@ -110,14 +110,14 @@ public class AppChooserPreference extends Preference {
 
     public static CharSequence getDisplayValue(Context context, String value) {
         if (TextUtils.isEmpty(value)) {
-            return context.getString(R.string.pref_shortcut_default);
+            return context.getString(R.string.pref_yr_shortcut_default);
         }
 
         Intent intent;
         try {
             intent = Intent.parseUri(value, Intent.URI_INTENT_SCHEME);
         } catch (URISyntaxException e) {
-            return context.getString(R.string.pref_shortcut_default);
+            return context.getString(R.string.pref_yr_shortcut_default);
         }
 
         PackageManager pm = context.getPackageManager();
@@ -338,7 +338,7 @@ public class AppChooserPreference extends Preference {
 
                 if (mAllowUseDefault && position == 0) {
                     ((TextView) convertView.findViewById(android.R.id.text1))
-                            .setText(getString(R.string.pref_shortcut_default));
+                            .setText(getString(R.string.pref_yr_shortcut_default));
                     ((ImageView) convertView.findViewById(android.R.id.icon))
                             .setImageDrawable(null);
                 } else {

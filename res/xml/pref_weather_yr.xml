@@ -1,5 +1,5 @@
 <!--
-  Copyright 2013 Google Inc.
+  Copyright 2012 Google Inc.
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -14,7 +14,8 @@
   limitations under the License.
   -->
 
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res/com.ctrlplusz.dashclock.yr">
 
     <ListPreference
         android:key="pref_yr_weather_units"
@@ -25,4 +26,18 @@
         android:negativeButtonText="@null"
         android:positiveButtonText="@null" />
 
+    <!--
+    <ListPreference
+            android:key="pref_yr_weather_decimals"
+            android:entryValues="@array/pref_yr_weather_decimals_values"
+            android:entries="@array/pref_yr_weather_decimals_display_names"
+            android:title="@string/pref_yr_weather_decimals_title"
+            android:defaultValue="zero"
+            android:negativeButtonText="@null"
+            android:positiveButtonText="@null" />
+    -->
+    <com.ctrlplusz.dashclock.yr.configuration.AppChooserPreference
+        android:key="pref_yr_weather_shortcut"
+        android:title="@string/pref_yr_shortcut_title"
+        app:allowUseDefault="true" />
 </PreferenceScreen>

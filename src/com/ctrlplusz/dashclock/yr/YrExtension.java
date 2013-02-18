@@ -48,9 +48,8 @@ public class YrExtension extends DashClockExtension {
 
     public static final String PREF_WEATHER_UNITS = "pref_yr_weather_units";
     public static final String PREF_WEATHER_SHORTCUT = "pref_yr_weather_shortcut";
-
     public static final Intent DEFAULT_WEATHER_INTENT = new Intent(Intent.ACTION_VIEW,
-            Uri.parse("https://www.google.com/search?q=weather"));
+            Uri.parse("http://m.yr.no"));
 
     private static final long STALE_LOCATION_NANOS = 10l * 60000000000l; // 10 minutes
 
@@ -153,11 +152,18 @@ public class YrExtension extends DashClockExtension {
         try {
             WeatherData weatherData = getWeatherDataForLocation(location);
             publishUpdate(renderExtensionData(weatherData));
-        } catch (IOException e) {
-            Log.w(TAG, "Generic read error while retrieving weather information.", e);
-        } catch (InvalidLocationException e) {
-            Log.w(TAG, "Invalid location.", e);
+        } catch (CantGetWeatherException e) {
+            publishErrorUpdate(e);
         }
+    }
+
+    private void publishErrorUpdate(CantGetWeatherException e) {
+        publishUpdate(new ExtensionData()
+                .visible(true)
+                .clickIntent(sWeatherIntent)
+                .icon(R.drawable.ic_weather_clear)
+                .status(getString(R.string.status_none))
+                .expandedBody(getString(e.getUserFacingErrorStringId())));
     }
 
     private ExtensionData renderExtensionData(WeatherData weatherData) {
@@ -200,14 +206,15 @@ public class YrExtension extends DashClockExtension {
         return temperature;
     }
 
-    private static WeatherData getWeatherDataForLocation(Location location) throws IOException, InvalidLocationException {
+    private static WeatherData getWeatherDataForLocation(Location location) throws CantGetWeatherException {
         WeatherData data = new WeatherData();
         LocationInfo li = getLocationInfo(location);
         data.location = li.town + ", " + li.country;
 
-        HttpURLConnection connection = Utils.openUrlConnection(buildWeatherQueryUrl(location));
+        HttpURLConnection connection = null;
 
         try {
+            connection = Utils.openUrlConnection(buildWeatherQueryUrl(location));
             XmlPullParser xpp = sXmlPullParserFactory.newPullParser();
             xpp.setInput(new InputStreamReader(connection.getInputStream()));
 
@@ -244,7 +251,11 @@ public class YrExtension extends DashClockExtension {
             return data;
 
         } catch (XmlPullParserException e) {
-            throw new IOException("Error parsing weather feed XML.", e);
+            throw new CantGetWeatherException(R.string.no_weather_data, "Error parsing weather data");
+        } catch (MalformedURLException e) {
+            throw new CantGetWeatherException(R.string.no_weather_data, "Invalid url");
+        } catch (IOException e) {
+            throw new CantGetWeatherException(R.string.no_weather_data, "Error reading weather data");
         } finally {
             connection.disconnect();
         }
@@ -254,13 +265,14 @@ public class YrExtension extends DashClockExtension {
         return "http://api.yr.no/weatherapi/locationforecast/1.8/?lat=" + location.getLatitude() + "&lon=" + location.getLongitude();
     }
 
-    private static LocationInfo getLocationInfo(Location location)
-            throws IOException, InvalidLocationException {
+    private static LocationInfo getLocationInfo(Location location) throws CantGetWeatherException {
         LocationInfo li = new LocationInfo();
-        HttpURLConnection connection = Utils.openUrlConnection(buildPlaceSearchUrl(location));
-        InputStreamReader inputStreamReader = new InputStreamReader(connection.getInputStream());
 
+        InputStreamReader inputStreamReader = null;
+        HttpURLConnection connection = null;
         try {
+            connection = Utils.openUrlConnection(buildPlaceSearchUrl(location));
+            inputStreamReader = new InputStreamReader(connection.getInputStream());
             XmlPullParser xpp = sXmlPullParserFactory.newPullParser();
 
             xpp.setInput(inputStreamReader);
@@ -285,13 +297,19 @@ public class YrExtension extends DashClockExtension {
                 return li;
             }
 
-            throw new InvalidLocationException();
+            throw new CantGetWeatherException(R.string.no_weather_data, "No location available");
 
         } catch (XmlPullParserException e) {
-            throw new IOException("Error parsing location XML response.", e);
+            throw new CantGetWeatherException(R.string.no_weather_data, "Error parsing XML response");
+        } catch (IOException e) {
+            throw new CantGetWeatherException(R.string.no_weather_data, "Error reading response");
         } finally {
             connection.disconnect();
-            inputStreamReader.close();
+            try {
+                inputStreamReader.close();
+            } catch (IOException e) {
+                // Do nothing.
+            }
         }
     }
 
@@ -310,6 +328,28 @@ public class YrExtension extends DashClockExtension {
 
     public static class InvalidLocationException extends Exception {
         public InvalidLocationException() {
+        }
+    }
+
+    public static class CantGetWeatherException extends Exception {
+        int mUserFacingErrorStringId;
+
+        public CantGetWeatherException(int userFacingErrorStringId) {
+            this(userFacingErrorStringId, null, null);
+        }
+
+        public CantGetWeatherException(int userFacingErrorStringId, String detailMessage) {
+            this(userFacingErrorStringId, detailMessage, null);
+        }
+
+        public CantGetWeatherException(int userFacingErrorStringId, String detailMessage,
+                                       Throwable throwable) {
+            super(detailMessage, throwable);
+            mUserFacingErrorStringId = userFacingErrorStringId;
+        }
+
+        public int getUserFacingErrorStringId() {
+            return mUserFacingErrorStringId;
         }
     }
 }
