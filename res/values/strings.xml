@@ -20,6 +20,15 @@
 
     <string name="status_none">––</string>
 
+
+    <!-- Universal settings preferences -->
+    <string name="pref_shortcut_title">Shortcut</string>
+    <string name="pref_shortcut_default">(Default)</string>
+
+    <string name="title_apps">Apps</string>
+    <string name="title_shortcuts">Shortcuts</string>
+
+    <!-- Yr Weather Extension -->
     <string name="weather_extension_title">Weather</string>
     <string name="weather_extension_description">
         Displays the latest weather information around you, including current temperature and

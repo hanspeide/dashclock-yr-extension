@@ -31,6 +31,7 @@ import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.util.Log;
+import com.ctrlplusz.dashclock.yr.configuration.AppChooserPreference;
 import com.google.android.apps.dashclock.api.DashClockExtension;
 import com.google.android.apps.dashclock.api.ExtensionData;
 import org.xmlpull.v1.XmlPullParser;
@@ -46,6 +47,10 @@ import java.util.Locale;
 public class YrExtension extends DashClockExtension {
 
     public static final String PREF_WEATHER_UNITS = "pref_yr_weather_units";
+    public static final String PREF_WEATHER_SHORTCUT = "pref_yr_weather_shortcut";
+
+    public static final Intent DEFAULT_WEATHER_INTENT = new Intent(Intent.ACTION_VIEW,
+            Uri.parse("https://www.google.com/search?q=weather"));
 
     private static final long STALE_LOCATION_NANOS = 10l * 60000000000l; // 10 minutes
 
@@ -53,6 +58,7 @@ public class YrExtension extends DashClockExtension {
 
     private static final Criteria sLocationCriteria;
 
+    private static Intent sWeatherIntent;
     private static String sWeatherUnits = "f";
 
     private boolean mOneTimeLocationListenerActive = false;
@@ -79,6 +85,8 @@ public class YrExtension extends DashClockExtension {
     protected void onUpdateData(int reason) {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
         sWeatherUnits = sp.getString(PREF_WEATHER_UNITS, sWeatherUnits);
+        sWeatherIntent = AppChooserPreference.getIntentValue(
+                sp.getString(PREF_WEATHER_SHORTCUT, null), DEFAULT_WEATHER_INTENT);
 
         NetworkInfo ni = ((ConnectivityManager) getSystemService(
                 Context.CONNECTIVITY_SERVICE)).getActiveNetworkInfo();
@@ -176,12 +184,11 @@ public class YrExtension extends DashClockExtension {
         return new ExtensionData()
                 .visible(true)
                 .status(temperature)
+                .clickIntent(sWeatherIntent)
                 .expandedTitle(getString(R.string.weather_expanded_title_template, temperature + sWeatherUnits.toUpperCase(Locale.US),
                         weatherData.conditionText))
                 .icon(conditionIconId)
-                .expandedBody(expandedBody.toString())
-                .clickIntent(new Intent(Intent.ACTION_VIEW)
-                        .setData(Uri.parse("https://www.google.com/search?q=weather")));
+                .expandedBody(expandedBody.toString());
     }
 
     private String getTemperatureBasedOnSelectedWeatherUnit(String temperature) {

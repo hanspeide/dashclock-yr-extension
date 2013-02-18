@@ -16,9 +16,6 @@
 
 package com.ctrlplusz.dashclock.yr;
 
-
-import com.ctrlplusz.yrextension.R;
-
 /**
  * A helper class representing weather data, for use with {@link YrExtension}.
  */
