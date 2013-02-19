@@ -50,6 +50,7 @@ import java.util.Locale;
 public class YrExtension extends DashClockExtension {
 
     public static final String PREF_WEATHER_UNITS = "pref_yr_weather_units";
+    public static final String PREF_WEATHER_TEMPERATURE_PRECISION = "pref_yr_weather_precision";
     public static final String PREF_WEATHER_SHORTCUT = "pref_yr_weather_shortcut";
     public static final Intent DEFAULT_WEATHER_INTENT = new Intent(Intent.ACTION_VIEW,
             Uri.parse("http://m.yr.no"));
@@ -60,8 +61,9 @@ public class YrExtension extends DashClockExtension {
 
     private static final Criteria sLocationCriteria;
 
-    private static Intent sWeatherIntent;
     private static String sWeatherUnits = "f";
+    private static String sWeatherTemperaturePrecision = "zero";
+    private static Intent sWeatherIntent;
 
     private boolean mOneTimeLocationListenerActive = false;
 
@@ -87,8 +89,8 @@ public class YrExtension extends DashClockExtension {
     protected void onUpdateData(int reason) {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
         sWeatherUnits = sp.getString(PREF_WEATHER_UNITS, sWeatherUnits);
-        sWeatherIntent = AppChooserPreference.getIntentValue(
-                sp.getString(PREF_WEATHER_SHORTCUT, null), DEFAULT_WEATHER_INTENT);
+        sWeatherTemperaturePrecision = sp.getString(PREF_WEATHER_TEMPERATURE_PRECISION, sWeatherTemperaturePrecision);
+        sWeatherIntent = AppChooserPreference.getIntentValue(sp.getString(PREF_WEATHER_SHORTCUT, null), DEFAULT_WEATHER_INTENT);
 
         NetworkInfo ni = ((ConnectivityManager) getSystemService(
                 Context.CONNECTIVITY_SERVICE)).getActiveNetworkInfo();
@@ -171,7 +173,7 @@ public class YrExtension extends DashClockExtension {
 
     private ExtensionData renderExtensionData(YrWeatherData weatherData) {
         String temperature = weatherData.hasValidTemperature()
-                ? getString(R.string.temperature_template, getTemperatureBasedOnSelectedWeatherUnit(weatherData.temperature))
+                ? getString(R.string.temperature_template, getTemperatureBasedOnSelectedPrecision(weatherData.temperature))
                 : getString(R.string.status_none);
         StringBuilder expandedBody = new StringBuilder();
 
@@ -200,13 +202,20 @@ public class YrExtension extends DashClockExtension {
                 .expandedBody(expandedBody.toString());
     }
 
-    private String getTemperatureBasedOnSelectedWeatherUnit(String temperature) {
-        if (sWeatherUnits.equals("f")){
-            double fahrenheitTemperature = Double.valueOf(temperature)  *  9/5 + 32;
-            return Long.toString(Math.round(fahrenheitTemperature));
+    private String getTemperatureBasedOnSelectedPrecision(String temperature) {
+        if (sWeatherTemperaturePrecision.equals("zero")){
+            if (sWeatherUnits.equals("c")){
+                return Long.toString(Math.round(Double.valueOf(temperature)));
+            } else {
+                return Long.toString(Math.round(Double.valueOf(temperature)  *  9/5 + 32));
+            }
+        } else {
+            if (sWeatherUnits.equals("c")){
+                return Double.toString(Double.valueOf(temperature));
+            } else {
+                return Double.toString(Double.valueOf(temperature)  *  9/5 + 32);
+            }
         }
-
-        return temperature;
     }
 
     private static YrWeatherData getWeatherDataForLocation(Location location) throws CantGetWeatherException {

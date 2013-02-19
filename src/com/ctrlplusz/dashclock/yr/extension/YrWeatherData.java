@@ -86,8 +86,8 @@ public class YrWeatherData {
             case 4: return "Cloudy";
             case 5: return "Light Rain/Sun";
             case 6: return "Light Rain/Thunder/Sun";
-            case 7:  return "Sleet and Sun";
-            case 8:  return "Snow and Sun";
+            case 7: return "Sleet and Sun";
+            case 8: return "Snow and Sun";
             case 9: return "Light Rain";
             case 10: return "Rain";
             case 11: return "Rain and Thunder";

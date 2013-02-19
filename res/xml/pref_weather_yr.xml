@@ -26,16 +26,14 @@
         android:negativeButtonText="@null"
         android:positiveButtonText="@null" />
 
-    <!--
     <ListPreference
-            android:key="pref_yr_weather_decimals"
-            android:entryValues="@array/pref_yr_weather_decimals_values"
-            android:entries="@array/pref_yr_weather_decimals_display_names"
-            android:title="@string/pref_yr_weather_decimals_title"
+            android:key="pref_yr_weather_temperature_precision"
+            android:entryValues="@array/pref_yr_weather_temperature_precision_values"
+            android:entries="@array/pref_yr_weather_temperature_precision_display_names"
+            android:title="@string/pref_yr_weather_temperature_precision_title"
             android:defaultValue="zero"
             android:negativeButtonText="@null"
             android:positiveButtonText="@null" />
-    -->
     <com.ctrlplusz.dashclock.yr.configuration.AppChooserPreference
         android:key="pref_yr_weather_shortcut"
         android:title="@string/pref_yr_shortcut_title"
