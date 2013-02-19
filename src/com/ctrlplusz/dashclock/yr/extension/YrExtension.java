@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.ctrlplusz.dashclock.yr;
+package com.ctrlplusz.dashclock.yr.extension;
 
 import android.content.Context;
 import android.content.Intent;
@@ -31,7 +31,10 @@ import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.util.Log;
+import com.ctrlplusz.dashclock.yr.Config;
+import com.ctrlplusz.dashclock.yr.R;
 import com.ctrlplusz.dashclock.yr.configuration.AppChooserPreference;
+import com.ctrlplusz.dashclock.yr.util.Utils;
 import com.google.android.apps.dashclock.api.DashClockExtension;
 import com.google.android.apps.dashclock.api.ExtensionData;
 import org.xmlpull.v1.XmlPullParser;
@@ -150,7 +153,7 @@ public class YrExtension extends DashClockExtension {
 
     private void getWeatherAndTryPublishUpdate(Location location) {
         try {
-            WeatherData weatherData = getWeatherDataForLocation(location);
+            YrWeatherData weatherData = getWeatherDataForLocation(location);
             publishUpdate(renderExtensionData(weatherData));
         } catch (CantGetWeatherException e) {
             publishErrorUpdate(e);
@@ -166,14 +169,14 @@ public class YrExtension extends DashClockExtension {
                 .expandedBody(getString(e.getUserFacingErrorStringId())));
     }
 
-    private ExtensionData renderExtensionData(WeatherData weatherData) {
+    private ExtensionData renderExtensionData(YrWeatherData weatherData) {
         String temperature = weatherData.hasValidTemperature()
                 ? getString(R.string.temperature_template, getTemperatureBasedOnSelectedWeatherUnit(weatherData.temperature))
                 : getString(R.string.status_none);
         StringBuilder expandedBody = new StringBuilder();
 
-        int conditionIconId = WeatherData.getConditionIconId(weatherData.conditionCode);
-        if (WeatherData.getConditionIconId(weatherData.todayForecastConditionCode)
+        int conditionIconId = YrWeatherData.getConditionIconId(weatherData.conditionCode);
+        if (YrWeatherData.getConditionIconId(weatherData.todayForecastConditionCode)
                 == R.drawable.ic_weather_raining) {
 
             // Show rain if it will rain today.
@@ -206,8 +209,8 @@ public class YrExtension extends DashClockExtension {
         return temperature;
     }
 
-    private static WeatherData getWeatherDataForLocation(Location location) throws CantGetWeatherException {
-        WeatherData data = new WeatherData();
+    private static YrWeatherData getWeatherDataForLocation(Location location) throws CantGetWeatherException {
+        YrWeatherData data = new YrWeatherData();
         LocationInfo li = getLocationInfo(location);
         data.location = li.town + ", " + li.country;
 
@@ -246,7 +249,7 @@ public class YrExtension extends DashClockExtension {
                 eventType = xpp.next();
             }
 
-            data.conditionText = WeatherData.getConditionText(data.conditionCode);
+            data.conditionText = YrWeatherData.getConditionText(data.conditionCode);
 
             return data;
 

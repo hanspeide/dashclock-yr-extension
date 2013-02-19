@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.ctrlplusz.dashclock.yr;
+package com.ctrlplusz.dashclock.yr.util;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;

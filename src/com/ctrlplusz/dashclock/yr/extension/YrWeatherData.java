@@ -14,12 +14,14 @@
  * limitations under the License.
  */
 
-package com.ctrlplusz.dashclock.yr;
+package com.ctrlplusz.dashclock.yr.extension;
+
+import com.ctrlplusz.dashclock.yr.R;
 
 /**
- * A helper class representing weather data, for use with {@link YrExtension}.
+ * A helper class representing weather data, for use with {@link com.ctrlplusz.dashclock.yr.extension.YrExtension}.
  */
-public class WeatherData {
+public class YrWeatherData {
     public static final String INVALID_TEMPERATURE = "NaN";
     public static final int INVALID_CONDITION = -1;
 
@@ -30,7 +32,7 @@ public class WeatherData {
     public String forecastText;
     public String location;
 
-    public WeatherData() {
+    public YrWeatherData() {
     }
 
     public boolean hasValidTemperature() {

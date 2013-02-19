@@ -17,6 +17,7 @@
 package com.ctrlplusz.dashclock.yr;
 
 import android.os.Bundle;
+import com.ctrlplusz.dashclock.yr.extension.YrExtension;
 
 public class YrSettingsActivity extends BaseSettingsActivity {
     @Override

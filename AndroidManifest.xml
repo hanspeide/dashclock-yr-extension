@@ -31,7 +31,7 @@
                  android:icon="@drawable/ic_launcher"
                  android:theme="@android:style/Theme.Holo.Light.DarkActionBar">
 
-        <service android:name="com.ctrlplusz.dashclock.yr.YrExtension"
+        <service android:name=".extension.YrExtension"
                  android:icon="@drawable/ic_launcher_in_app"
                  android:label="Yr Weather"
                  android:permission="com.google.android.apps.dashclock.permission.READ_EXTENSION_DATA">
