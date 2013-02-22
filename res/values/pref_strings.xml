@@ -30,10 +30,10 @@
         <item>c</item>
     </string-array>
 
-    <!-- Weather -->
-    <string name="pref_yr_weather_temperature_precision_title">Temperature precision</string>
+    <!-- Weather - Preciscion -->
+    <string name="pref_yr_weather_temperature_precision_title">Temperature Precision</string>
     <string-array name="pref_yr_weather_temperature_precision_display_names">
-        <item>Zero decimals</item>
+        <item>No decimals</item>
         <item>One decimal</item>
     </string-array>
     <string-array name="pref_yr_weather_temperature_precision_values">

@@ -34,6 +34,7 @@
             android:defaultValue="zero"
             android:negativeButtonText="@null"
             android:positiveButtonText="@null" />
+
     <com.ctrlplusz.dashclock.yr.configuration.AppChooserPreference
         android:key="pref_yr_weather_shortcut"
         android:title="@string/pref_yr_shortcut_title"

@@ -39,5 +39,6 @@ public class YrSettingsActivity extends BaseSettingsActivity {
         // to reflect the new value, per the Android Design guidelines.
         bindPreferenceSummaryToValue(findPreference(YrExtension.PREF_WEATHER_UNITS));
         bindPreferenceSummaryToValue(findPreference(YrExtension.PREF_WEATHER_SHORTCUT));
+        bindPreferenceSummaryToValue(findPreference(YrExtension.PREF_WEATHER_TEMPERATURE_PRECISION));
     }
 }
