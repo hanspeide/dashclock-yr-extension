@@ -45,12 +45,15 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
+import java.text.DecimalFormat;
 import java.util.Locale;
+
+import static com.ctrlplusz.dashclock.yr.Config.TAG;
 
 public class YrExtension extends DashClockExtension {
 
     public static final String PREF_WEATHER_UNITS = "pref_yr_weather_units";
-    public static final String PREF_WEATHER_TEMPERATURE_PRECISION = "pref_yr_weather_precision";
+    public static final String PREF_WEATHER_TEMPERATURE_PRECISION = "pref_yr_weather_temperature_precision";
     public static final String PREF_WEATHER_SHORTCUT = "pref_yr_weather_shortcut";
     public static final Intent DEFAULT_WEATHER_INTENT = new Intent(Intent.ACTION_VIEW,
             Uri.parse("http://m.yr.no"));
@@ -74,14 +77,12 @@ public class YrExtension extends DashClockExtension {
         sLocationCriteria.setCostAllowed(false);
     }
 
-    private static final String TAG = "Yr Dashclock Extension";
-
     static {
         try {
             sXmlPullParserFactory = XmlPullParserFactory.newInstance();
             sXmlPullParserFactory.setNamespaceAware(true);
         } catch (XmlPullParserException e) {
-            Log.e(TAG, "Could not instantiate XmlPullParserFactory", e);
+            Log.e(Config.TAG, "Could not instantiate XmlPullParserFactory", e);
         }
     }
 
@@ -94,7 +95,7 @@ public class YrExtension extends DashClockExtension {
 
         NetworkInfo ni = ((ConnectivityManager) getSystemService(
                 Context.CONNECTIVITY_SERVICE)).getActiveNetworkInfo();
-        if (ni == null || !ni.isConnected()) {
+        if (ni == null || !ni.isConnectedOrConnecting()) {
             return;
         }
 
@@ -130,6 +131,7 @@ public class YrExtension extends DashClockExtension {
     private LocationListener mOneTimeLocationListener = new LocationListener() {
         @Override
         public void onLocationChanged(Location location) {
+            // TODO: Add interval preference here
             getWeatherAndTryPublishUpdate(location);
             disableOneTimeLocationListener();
         }
@@ -210,10 +212,12 @@ public class YrExtension extends DashClockExtension {
                 return Long.toString(Math.round(Double.valueOf(temperature)  *  9/5 + 32));
             }
         } else {
+            DecimalFormat df = new DecimalFormat("###.#");
             if (sWeatherUnits.equals("c")){
-                return Double.toString(Double.valueOf(temperature));
+                return Double.valueOf(temperature).toString();
             } else {
-                return Double.toString(Double.valueOf(temperature)  *  9/5 + 32);
+
+                return df.format((Double.valueOf(temperature)  *  9/5 + 32));
             }
         }
     }
@@ -317,12 +321,9 @@ public class YrExtension extends DashClockExtension {
             throw new CantGetWeatherException(R.string.no_weather_data, "Error reading response");
         } finally {
             connection.disconnect();
-            try {
-                inputStreamReader.close();
-            } catch (IOException e) {
-                // Do nothing.
-            }
         }
+
+
     }
 
     private static String buildPlaceSearchUrl(Location l) throws MalformedURLException {
