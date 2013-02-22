@@ -57,14 +57,15 @@ public class YrWeatherData {
             case 6: // light rain thunder sun
             case 9: // light rain
             case 10: // rain
-            case 11: // rain and thunder
             case 18: // light rain sun (winter darkness);
             case 22: // light rain thunder
-
-                return R.drawable.ic_weather_raining;
-            case 7:  // sleet sun
-            case 8:  // snow sun
+            return R.drawable.ic_weather_raining;
+            case 11:
+                return R.drawable.ic_weather_rain_and_thunder; // rain and thunder
             case 12: // sleet
+            case 7:  // sleet sun
+                return R.drawable.ic_weather_sleet;
+            case 8:  // snow sun
             case 13: // snow
             case 14: // snow thunder
             case 19: // snow sun (winter darkness)
