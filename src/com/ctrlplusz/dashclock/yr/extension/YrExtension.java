@@ -320,7 +320,9 @@ public class YrExtension extends DashClockExtension {
         } catch (IOException e) {
             throw new CantGetWeatherException(R.string.no_weather_data, "Error reading response");
         } finally {
-            connection.disconnect();
+            if (connection != null){
+                connection.disconnect();
+            }
         }
 
 
